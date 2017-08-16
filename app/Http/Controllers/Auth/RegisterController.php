@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Entities\UserEntity;
 use App\Http\Controllers\Controller;
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -21,7 +22,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-
+    public $em;
     /**
      * Where to redirect users after registration.
      *
@@ -34,9 +35,11 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
+        $this->em = $em;
         $this->middleware('guest');
+
     }
 
     /**
@@ -52,7 +55,7 @@ class RegisterController extends Controller
 
         return Validator::make($data, [
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:App\Entities\UserEntity',
             'password' => 'required|min:6|confirmed',
         ]);
     }
@@ -61,16 +64,19 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return \App\Entities\UserEntity
      */
     protected function create(array $data)
     {
         $data['is_subscribed'] = empty($data['is_subscribed']) ? 0 : 1;
-
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $user = new UserEntity(
+            $data['name'],
+            $data['email'],
+            bcrypt($data['password'])
+        );
+        dd($this);
+        $this->em->persist($user);
+        $this->em->flush();
+        return $user;
     }
 }

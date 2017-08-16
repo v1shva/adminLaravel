@@ -7,45 +7,48 @@
  */
 
 namespace App\Entities;
-use \Doctrine\Common\Persistence\PersistentObject;
 use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
- * @ORM\Table(name="users")
+ * @ORM\Table(name="messages")
  */
-class MessageEntity extends PersistentObject
+class MessageEntity
 {
     /**
-     * @ORM\ManyToOne(targetEntity="UserEntity", inversedBy="id")
-     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
-    private $userId;
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserEntity", inversedBy="messages")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @ORM\Column(type="string")
      */
     private $message;
 
+    /**
+     * MessageEntity constructor.
+     * @param $user
+     * @param $message
+     */
+    public function __construct($user, $message)
+    {
+        $this->user = $user;
+        $this->message = $message;
+    }
+
     public function scopeMostRecent($query)
     {
         return $query->orderBy('created_at', 'desc')->limit(10);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
 
-    /**
-     * @param mixed $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
 
     /**
      * @return mixed
@@ -53,6 +56,22 @@ class MessageEntity extends PersistentObject
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 
     /**

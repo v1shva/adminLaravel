@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class UserEntity extends PersistentObject implements Authenticatable
+class UserEntity implements Authenticatable
 {
     use \LaravelDoctrine\ORM\Auth\Authenticatable;
     use Notifiable, OwnsRecord, HasModelTrait;
@@ -56,15 +56,6 @@ class UserEntity extends PersistentObject implements Authenticatable
      */
     private $status_id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $remember_token;
 
 
     /**
@@ -80,14 +71,13 @@ class UserEntity extends PersistentObject implements Authenticatable
     private $socialProviders;
 
     /**
-     * @ORM\OneToOne(targetEntity="ProfileEntity", mappedBy="userId")
-     * @ORM\JoinColumn(name="id", referencedColumnName="userId")
+     * @ORM\OneToOne(targetEntity="ProfileEntity", mappedBy="user")
      */
     private $profile;
 
     /**
-     * @ORM\OneToMany(targetEntity="MessageEntity", mappedBy="userId")
-     * @ORM\JoinColumn(name="id", referencedColumnName="userId")
+     * @ORM\OneToMany(targetEntity="MessageEntity", mappedBy="user")
+     * @ORM\JoinColumn(name="id", referencedColumnName="user")
      */
     private $messages;
 

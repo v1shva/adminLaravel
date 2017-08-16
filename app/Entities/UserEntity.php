@@ -15,7 +15,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use \Doctrine\Common\Persistence\PersistentObject;
 use \Doctrine\ORM\EntityManager;
 use App\Http\Requests\UserRequest;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
@@ -68,14 +68,34 @@ class UserEntity extends PersistentObject implements Authenticatable
 
 
     /**
-     * @ORM\OneToMany(targetEntity="WidgetEntity", mappedBy="rankedSong")
-     * @ORM\JoinColumn(name="id", referencedColumnName="rankedSong")
+     * @ORM\OneToMany(targetEntity="WidgetEntity", mappedBy="userId")
+     * @ORM\JoinColumn(name="id", referencedColumnName="userId")
      */
     private $widgets;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SocialProviderEntity", mappedBy="userId")
+     * @ORM\JoinColumn(name="id", referencedColumnName="userId")
+     */
+    private $socialProviders;
+
+    /**
+     * @ORM\OneToOne(targetEntity="ProfileEntity", mappedBy="userId")
+     * @ORM\JoinColumn(name="id", referencedColumnName="userId")
+     */
+    private $profile;
+
+    /**
+     * @ORM\OneToMany(targetEntity="MessageEntity", mappedBy="userId")
+     * @ORM\JoinColumn(name="id", referencedColumnName="userId")
+     */
+    private $messages;
+
     public function __construct($name, $email, $password)
     {
-        $this->rank = new ArrayCollection();
+        $this->widgets = new ArrayCollection();
+        $this->socialProviders = new ArrayCollection();
+        $this->messages = new ArrayCollection();
         $this->name = $name;
         $this->email = $email;
         $this->password= $password;
@@ -103,14 +123,11 @@ class UserEntity extends PersistentObject implements Authenticatable
 
     public function showNewsletterStatusOf(UserEntity $user)
     {
-
         return $user->getisSubscribed() == 1 ? 'Yes' : 'No';
-
     }
 
     public function isAdmin()
     {
-
         return Auth::user()->getisAdmin() == 1;
     }
 
@@ -230,6 +247,70 @@ class UserEntity extends PersistentObject implements Authenticatable
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWidgets()
+    {
+        return $this->widgets;
+    }
+
+    /**
+     * @param mixed $widgets
+     */
+    public function setWidgets($widgets)
+    {
+        $this->widgets = $widgets;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSocialProviders()
+    {
+        return $this->socialProviders;
+    }
+
+    /**
+     * @param mixed $socialProviders
+     */
+    public function setSocialProviders($socialProviders)
+    {
+        $this->socialProviders = $socialProviders;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfile()
+    {
+        return $this->profile;
+    }
+
+    /**
+     * @param mixed $profile
+     */
+    public function setProfile($profile)
+    {
+        $this->profile = $profile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @param mixed $messages
+     */
+    public function setMessages($messages)
+    {
+        $this->messages = $messages;
     }
 
     /**

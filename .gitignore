@@ -1,0 +1,8 @@
+
+\.env
+
+vendor/
+
+\.vagrant/machines/admin-dash/virtualbox/
+
+\.idea/

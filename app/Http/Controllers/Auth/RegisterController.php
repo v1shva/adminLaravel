@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Entities\UserEntity;
 use App\Http\Controllers\Controller;
-use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -22,7 +21,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-    public $em;
+
     /**
      * Where to redirect users after registration.
      *
@@ -35,9 +34,9 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(EntityManagerInterface $em)
+    protected $em;
+    public function __construct()
     {
-        $this->em = $em;
         $this->middleware('guest');
 
     }
@@ -72,9 +71,9 @@ class RegisterController extends Controller
         $user = new UserEntity(
             $data['name'],
             $data['email'],
-            bcrypt($data['password'])
+            bcrypt($data['password']),
+            10
         );
-        dd($this);
         $this->em->persist($user);
         $this->em->flush();
         return $user;

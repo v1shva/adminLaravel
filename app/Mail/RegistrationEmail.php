@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\User;
+use App\Entities\UserEntity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -19,7 +19,7 @@ class RegistrationEmail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(UserEntity $user)
     {
         $this->user = $user;
     }
@@ -32,5 +32,19 @@ class RegistrationEmail extends Mailable
     public function build()
     {
         return $this->markdown('emails.registration-email');
+    }
+
+    protected function setAddress($address, $name = null, $property = 'to')
+    {
+        foreach ($this->addressesToArray($address, $name) as $recipient) {
+            $recipient = $this->normalizeRecipient($recipient);
+
+            $this->{$property}[] = [
+                'name' => isset($recipient->name) ? $recipient->name : null,
+                'address' => $recipient->getEmail(),
+            ];
+        }
+
+        return $this;
     }
 }

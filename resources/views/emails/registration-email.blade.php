@@ -1,7 +1,7 @@
 @component('mail::message')
 # Registration Confirmation
 
-## Congratulations {{ $user->name }}!
+## Congratulations {{ $user->getName() }}!
 
 You have joined our site and now have access to the following benefits:
 

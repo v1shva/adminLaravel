@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\User;
+use App\Entities\UserEntity;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -21,7 +21,7 @@ class RegistrationCompleted
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(UserEntity $user)
     {
         $this->user = $user;
     }

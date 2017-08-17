@@ -12,7 +12,7 @@ use App\Traits\HasModelTrait;
 use Illuminate\Notifications\Notifiable;
 use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Contracts\Auth\Authenticatable;
-use \Doctrine\Common\Persistence\PersistentObject;
+use Illuminate\Support\Facades\Auth;
 use \Doctrine\ORM\EntityManager;
 use App\Http\Requests\UserRequest;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,20 +42,19 @@ class UserEntity implements Authenticatable
     private $email;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $is_subscribed;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $is_admin;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $status_id;
-
 
 
     /**
@@ -81,7 +80,7 @@ class UserEntity implements Authenticatable
      */
     private $messages;
 
-    public function __construct($name, $email, $password)
+    public function __construct($name, $email, $password, $statusID)
     {
         $this->widgets = new ArrayCollection();
         $this->socialProviders = new ArrayCollection();
@@ -89,7 +88,7 @@ class UserEntity implements Authenticatable
         $this->name = $name;
         $this->email = $email;
         $this->password= $password;
-
+        $this->status_id = $statusID;
     }
 
     public function updateUser(EntityManager $em,UserEntity $user, UserRequest $request)
@@ -118,7 +117,7 @@ class UserEntity implements Authenticatable
 
     public function isAdmin()
     {
-        return Auth::user()->getisAdmin() == 1;
+        return Autah::user()->getisAdmin() == 1;
     }
 
     public function isActiveStatus()
@@ -308,15 +307,15 @@ class UserEntity implements Authenticatable
      */
     public function getRememberToken()
     {
-        return $this->remember_token;
+        return $this->rememberToken;
     }
 
     /**
      * @param mixed $remember_token
      */
-    public function setRememberToken($remember_token)
+    public function setRememberToken($rememberToken)
     {
-        $this->remember_token = $remember_token;
+        $this->rememberToken = $rememberToken;
     }
 
 }

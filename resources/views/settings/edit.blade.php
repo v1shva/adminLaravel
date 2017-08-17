@@ -38,7 +38,7 @@
 
                 <div class="col-xs-4">
 
-                    <h2 class="min-width-200">Update {{ $user->name }}</h2>
+                    <h2 class="min-width-200">Update {{ $user->getName() }}</h2>
 
                         <!-- settings form -->
 

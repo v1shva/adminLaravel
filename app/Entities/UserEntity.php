@@ -16,14 +16,16 @@ use Illuminate\Support\Facades\Auth;
 use \Doctrine\ORM\EntityManager;
 use App\Http\Requests\UserRequest;
 use Doctrine\Common\Collections\ArrayCollection;
+use Illuminate\Contracts\Auth\CanResetPassword;
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class UserEntity implements Authenticatable
+class UserEntity implements Authenticatable, CanResetPassword
 {
     use \LaravelDoctrine\ORM\Auth\Authenticatable;
     use Notifiable, OwnsRecord, HasModelTrait;
+    use \Illuminate\Auth\Passwords\CanResetPassword;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -177,7 +179,7 @@ class UserEntity implements Authenticatable
     /**
      * @return mixed
      */
-    public function getisSubscribed()
+    public function getIsSubscribed()
     {
         return $this->is_subscribed;
     }

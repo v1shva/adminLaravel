@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
-use App\User;
+use App\Entities\UserEntity;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
 
 class SettingsController extends Controller
 {
 
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
-
+        $this->em = $em;
         $this->middleware('auth');
 
     }
@@ -27,10 +28,7 @@ class SettingsController extends Controller
     public function edit()
     {
 
-        $id = Auth::user()->id;
-
-        $user = User::findOrFail($id);
-
+        $user = Auth::user();
         return view('settings.edit', compact('user'));
 
     }
@@ -46,21 +44,22 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
 
-        $id = Auth::user()->id;
+        $id = Auth::user()->getId();
 
         $this->validate($request, [
             'name' => 'required|max:20',
-            'email' => 'required|email|max:255|unique:users,email,' .$id,
+            'email' => 'required|email|max:255|unique:App\Entities\UserEntity,email,'. $id,
             'is_subscribed' => 'boolean'
         ]);
 
-        $user = User::findOrFail($id);
+        $user = Auth::user();
+        $user->setName($request->name);
+        $user->setEmail($request->email);
+        $user->setIsSubscribed($request->is_subscribed);
+        $this->em->merge($user);
+        $this->em->flush();
 
-        $user->update(['name'  => $request->name,
-                       'email' => $request->email,
-                       'is_subscribed' => $request->is_subscribed]);
-
-        return redirect()->action('SettingsController@edit', [$user]);
+        return redirect()->action('SettingsController@edit', [$user->getId()]);
 
     }
 }

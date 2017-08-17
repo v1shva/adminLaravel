@@ -14,7 +14,7 @@
          <input type="text"
                 class="form-control"
                 name="name"
-                value="{{ $user->name }}">
+                value="{{ $user->getName() }}">
 
         @if ($errors->has('name'))
 
@@ -38,7 +38,7 @@
                    type="email"
                    class="form-control"
                    name="email"
-                   value="{{ $user->email }}">
+                   value="{{ $user->getEmail() }}">
 
             @if ($errors->has('email'))
 
@@ -62,8 +62,8 @@
                     id="is_subscribed"
                     name="is_subscribed">
 
-                <option value="{{ $user->is_subscribed }}">
-                               {{ $user->is_subscribed == 1 ? 'Yes' : 'No' }}</option>
+                <option value="{{ $user->getIsSubscribed() }}">
+                               {{ $user->getIsSubscribed() == 1 ? 'Yes' : 'No' }}</option>
                 <option value="1">Yes</option>
                 <option value="0">No</option>
 

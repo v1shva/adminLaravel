@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Socialite;
 use Illuminate\Auth\Events\Registered;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AuthController extends RegisterController
 {
@@ -21,12 +22,14 @@ class AuthController extends RegisterController
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
+        $this->em = $em;
         $this->middleware('guest', ['except' => ['logout',
             'redirectToProvider',
             'handleProviderCallback']
         ]);
+
     }
 
     private function checkStatusLevel()

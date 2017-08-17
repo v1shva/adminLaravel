@@ -22,8 +22,7 @@ class ProfileEntity
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="UserEntity", inversedBy="id")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="UserEntity")
      */
     private $user;
 
@@ -43,7 +42,7 @@ class ProfileEntity
     private $gender;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     private $birthdate;
 
@@ -151,10 +150,26 @@ class ProfileEntity
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
     public function fullName()
     {
 
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->firstName . ' ' . $this->lastName;
 
     }
 

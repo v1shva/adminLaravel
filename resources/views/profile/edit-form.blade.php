@@ -1,7 +1,7 @@
 <form class="form form-border"
       role="form"
       method="POST"
-      action="{{ url('/profile/'. $profile->id) }}">
+      action="{{ url('/profile/'. $profile->getId()) }}">
 
     <input type="hidden"
            name="_method"
@@ -18,7 +18,7 @@
         <input type="text"
                class="form-control"
                name="first_name"
-               value="{{ $profile->first_name }}">
+               value="{{ $profile->getFirstName() }}">
 
         @if ($errors->has('first_name'))
 
@@ -41,7 +41,7 @@
         <input type="text"
                class="form-control"
                name="last_name"
-               value="{{  $profile->last_name }}">
+               value="{{  $profile->getLastName() }}">
 
         @if ($errors->has('last_name'))
 
@@ -63,7 +63,7 @@
 
         <div>
 
-            {{  Form::date('birthdate', $profile->birthdate) }}
+            {{  Form::date('birthdate', $profile->getBirthdate()) }}
 
         </div>
 
@@ -90,8 +90,8 @@
                 id="gender"
                 name="gender">
 
-            <option value="{{ $profile->gender }}">
-                    {{ $profile->showGender($profile->gender) }}
+            <option value="{{ $profile->getGender() }}">
+                    {{ $profile->showGender($profile->getGender()) }}
             </option>
             <option value="1">Male</option>
             <option value="0">Female</option>

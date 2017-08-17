@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\AuthTraits\OwnsRecord;
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
-use App\Profile;
-use App\User;
+use App\Entities\ProfileEntity;
+use App\Entities\UserEntity;
 use Redirect;
 use Illuminate\Support\Facades\Auth;
 use DB;
@@ -14,13 +15,12 @@ use App\Exceptions\UnauthorizedException;
 class ProfileController extends Controller
 {
     use OwnsRecord;
-
-    public function __construct()
+    private $em;
+    public function __construct(EntityManagerInterface $em)
     {
-
+        $this->em = $em;
         $this->middleware('auth');
         $this->middleware('admin',['only'=> 'index']);
-
     }
 
     /**
@@ -31,7 +31,6 @@ class ProfileController extends Controller
 
     public function index()
     {
-
         $profiles = Profile::paginate(10);
         return view('profile.index', compact('profiles'));
 
@@ -54,7 +53,7 @@ class ProfileController extends Controller
 
     public function showProfileToUser()
     {
-        $profile = Profile::where('user_id', Auth::id())->first();
+        $profile =  $this->em->getRepository(ProfileEntity::class)->findOneBy(["user" => Auth::user()]);;
 
         if( ! $profile){
 
@@ -62,7 +61,7 @@ class ProfileController extends Controller
 
         }
 
-        $user = User::where('id', $profile->user_id)->first();
+        $user = $profile->getUser();
 
         if ($this->userNotOwnerOf($profile)){
 
@@ -116,16 +115,16 @@ class ProfileController extends Controller
             return Redirect::route('show-profile');
 
         }
+        $profile = new ProfileEntity(
+            Auth::user(),
+            $request->first_name,
+            $request->last_name,
+            $request->gender,
+            $request->birthdate);
 
-        $profile = Profile::create(['first_name' => $request->first_name,
-                                    'last_name' => $request->last_name,
-                                    'gender' => $request->gender,
-                                    'birthdate' => $request->birthdate,
-                                    'user_id' => Auth::user()->id]);
-
-        $profile->save();
-
-        $user = User::where('id', '=', $profile->user_id)->first();
+        $this->em->persist($profile);
+        $this->em->flush();
+        $user = $profile->getUser();
 
         return view('profile.show', compact('profile', 'user'));
     }
@@ -139,9 +138,9 @@ class ProfileController extends Controller
 
     public function show($id)
     {
-        $profile = Profile::findOrFail($id);
+        $profile =  $this->em->getRepository(ProfileEntity::class)->find($id);;
 
-        $user = User::where('id', $profile->user_id)->first();
+        $user = $profile->getUser();
 
         if( ! $this->adminOrCurrentUserOwns($profile)){
 
@@ -163,7 +162,7 @@ class ProfileController extends Controller
 
     public function edit($id)
     {
-        $profile = Profile::findOrFail($id);
+        $profile =  $this->em->getRepository(ProfileEntity::class)->find($id);;
 
         if ( ! $this->adminOrCurrentUserOwns($profile)){
 
@@ -190,22 +189,20 @@ class ProfileController extends Controller
             'gender' => 'boolean|required',
             'birthdate' => 'date|required'
         ]);
-
-        $profile = Profile::findOrFail($id);
+        $profile =  $this->em->getRepository(ProfileEntity::class)->find($id);;
 
         if ($this->userNotOwnerOf($profile)) {
 
             throw new UnauthorizedException;
 
         }
-
-        $profile->update(['first_name' => $request->first_name,
-                          'last_name' => $request->last_name,
-                          'gender' => $request->gender,
-                          'birthdate' => $request->birthdate]);
-
-
-        return Redirect::route('profile.show', ['profile' => $profile]);
+        $profile->setFirstName($request->first_name);
+        $profile->setLastName($request->last_name);
+        $profile->setGender($request->gender);
+        $profile->setBirthDate($request->birthdate);
+        $this->em->merge($profile);
+        $this->em->flush();
+        return Redirect::route('profile.show', ['profile' => $profile->getId()]);
 
     }
 
@@ -218,25 +215,19 @@ class ProfileController extends Controller
 
     public function destroy($id)
     {
-        $profile = Profile::findOrFail($id);
+        $profile =  $this->em->getRepository(ProfileEntity::class)->find($id);;
 
         if ($this->userNotOwnerOf($profile)){
 
             throw new UnauthorizedException;
 
         }
-
-        Profile::destroy($id);
+        $this->em->remove($profile);
+        $this->em->flush();
 
         if (Auth::user()->isAdmin()){
-
-
-
             return Redirect::route('profile.index');
         }
-
-
-
         return Redirect::route('home');
 
     }
@@ -247,10 +238,9 @@ class ProfileController extends Controller
 
     private function profileExists()
     {
-        $profileExists = DB::table('profiles')
-                       ->where('user_id', Auth::id())
-                       ->exists();
-
+        $profile =  $this->em->getRepository(ProfileEntity::class)->findBy(["user" => Auth::user()]);;
+        if($profile) $profileExists = true;
+        else $profileExists = false;
         return $profileExists;
 
     }

@@ -22,8 +22,7 @@ class SocialProviderEntity
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserEntity", inversedBy="messages")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="UserEntity")
      */
     private $user;
 

@@ -46,7 +46,7 @@
 
                             <!-- user gravatar-->
 
-                            <img src="{{ Gravatar::get(Auth::user()->email)  }}"
+                            <img src="{{ Gravatar::get(Auth::user()->getEmail())  }}"
                                  class="img-circle"
                                  alt="User Image">
 

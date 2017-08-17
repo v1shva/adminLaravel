@@ -7,12 +7,12 @@ trait OwnsRecord
 {
     public function userNotOwnerOf($modelRecord)
     {
-        return $modelRecord->user_id != Auth::id();
+        return $modelRecord->getUser() != Auth::user();
     }
 
     public function currentUserOwns($modelRecord)
     {
-        return $modelRecord->user_id === Auth::id();
+        return $modelRecord->getUser() === Auth::user();
     }
 
     public function adminOrCurrentUserOwns($modelRecord)
@@ -20,7 +20,7 @@ trait OwnsRecord
         if (Auth::user()->isAdmin()){
             return true;
         }
-        return $modelRecord->user_id === Auth::id();
+        return $modelRecord->getUser() === Auth::user();
     }
 
     public function allowUserUpdate($user)
@@ -32,7 +32,7 @@ trait OwnsRecord
 
         }
 
-        return $user->id === Auth::id();
+        return $user === Auth::user();
 
     }
 

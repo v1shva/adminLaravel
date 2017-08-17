@@ -23,7 +23,7 @@
 
         <!-- id -->
 
-        <td>{{ $profile->id }}</td>
+        <td>{{ $profile->getId() }}</td>
 
         <!-- end id -->
 
@@ -31,7 +31,7 @@
 
         <td>
 
-            <a href="/profile/{{ $profile->id }}/edit">
+            <a href="/profile/{{ $profile->getId() }}/edit">
 
                 {{ $profile->fullName() }}
 
@@ -43,13 +43,13 @@
 
         <!-- gender -->
 
-        <td>{{ $profile->showGender($profile->gender) }}</td>
+        <td>{{ $profile->showGender($profile->getGender()) }}</td>
 
         <!-- end gender -->
 
         <!-- birthdate -->
 
-        <td>{{ $profile->birthdate->format('m-d-Y') }}</td>
+        <td>{{ $profile->getBirthdate()}}</td>
 
         <!-- end birthdate -->
 
@@ -59,7 +59,7 @@
 
             <td>
 
-                <a href="/profile/{{ $profile->id }}/edit">
+                <a href="/profile/{{ $profile->getId() }}/edit">
 
                     <button type="button"
                             class="btn btn-default">Edit
@@ -79,7 +79,7 @@
                     <form class="form"
                           role="form"
                           method="POST"
-                          action="{{ url('/profile/'. $profile->id) }}">
+                          action="{{ url('/profile/'. $profile->getId()) }}">
 
                         <input type="hidden"
                                name="_method"

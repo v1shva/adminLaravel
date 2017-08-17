@@ -117,7 +117,7 @@ class UserEntity implements Authenticatable
 
     public function isAdmin()
     {
-        return Autah::user()->getisAdmin() == 1;
+        return Auth::user()->getisAdmin() == 1;
     }
 
     public function isActiveStatus()

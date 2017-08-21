@@ -28,7 +28,7 @@ class MinistryEntity
     private $ministry;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ServiceEntity", inversedBy="serviceId")
+     * @ORM\OneToOne(targetEntity="ServiceEntity", inversedBy="serviceId")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
      */
     private $service;

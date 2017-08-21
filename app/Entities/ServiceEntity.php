@@ -32,19 +32,17 @@ class ServiceEntity
     private $serviceId;
 
     /**
-     * @ORM\OneToMany(targetEntity="DSEntity", mappedBy="service")
+     * @ORM\OneToOne(targetEntity="DSEntity", mappedBy="service")
      */
-    private $DSs;
-
+    private $DS;
     /**
-     * @ORM\OneToMany(targetEntity="MinistryEntity", mappedBy="service")
+     * @ORM\OneToOne(targetEntity="MinistryEntity", mappedBy="service")
      */
-    private $Ministries;
-
-
+    private $Ministry;
     /**
      * @ORM\OneToMany(targetEntity="EmployeeEntity", mappedBy="currentService")
      */
+
     private $employees;
 
     /**
@@ -95,37 +93,7 @@ class ServiceEntity
         $this->serviceId = $serviceId;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDSs()
-    {
-        return $this->DSs;
-    }
 
-    /**
-     * @param mixed $DSs
-     */
-    public function setDSs($DSs)
-    {
-        $this->DSs = $DSs;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMinistries()
-    {
-        return $this->Ministries;
-    }
-
-    /**
-     * @param mixed $Ministries
-     */
-    public function setMinistries($Ministries)
-    {
-        $this->Ministries = $Ministries;
-    }
 
     /**
      * @return mixed
@@ -153,7 +121,14 @@ class ServiceEntity
         $this->type = $type;
         $this->serviceId = $serviceId;
         $this->employees = new ArrayCollection();
-        $this->DSs = new ArrayCollection();
-        $this->Ministries = new ArrayCollection();
+    }
+
+    public function getService(){
+        if($this->getServiceId() == 1){
+            return ($this->Ministry);
+        }
+        else if($this->getServiceId()){
+            return ($this->DS);
+        }
     }
 }

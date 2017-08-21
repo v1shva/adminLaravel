@@ -11,6 +11,8 @@
       apply the skin class to the body tag so the changes take effect.
 -->
 <link rel="stylesheet" href="/dist/css/skins/skin-blue.min.css">
+<script src="/plugins/jQueryUI/jquery-ui.min.js"></script>
+<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
 
 <!-- Custom Styles -->
 <link rel="stylesheet" href="{{ mix('/css/main.css') }}">

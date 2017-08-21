@@ -82,6 +82,27 @@ class UserEntity implements Authenticatable, CanResetPassword
      */
     private $messages;
 
+    /**
+     * @ORM\OneToOne(targetEntity="EmployeeEntity", mappedBy="user")
+     */
+    private $employee;
+
+    /**
+     * @return mixed
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+
+    /**
+     * @param mixed $employee
+     */
+    public function setEmployee($employee)
+    {
+        $this->employee = $employee;
+    }
+
     public function __construct($name, $email, $password, $statusID)
     {
         $this->widgets = new ArrayCollection();

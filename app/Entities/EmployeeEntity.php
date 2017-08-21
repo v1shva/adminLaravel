@@ -8,6 +8,7 @@
 
 namespace App\Entities;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="employees")
@@ -31,6 +32,34 @@ class EmployeeEntity
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
      */
     private $currentService;
+
+    /**
+     * Many Employees can have many Many Services
+     * @ORM\ManyToMany(targetEntity="ServiceEntity")
+     * @ORM\JoinTable(name="employee_services",
+     *      joinColumns={@ORM\JoinColumn(name="employee_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+     *      )
+     */
+    private $services;
+
+    /**
+     * One Cart has One Customer.
+     * @ORM\OneToOne(targetEntity="UserEntity", inversedBy="employee")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * EmployeeEntity constructor.
+     * @param $designation
+     * @param $currentService
+     */
+    public function __construct($designation, $currentService)
+    {
+        $this->designation = $designation;
+        $this->currentService = $currentService;
+    }
 
     /**
      * @return mixed

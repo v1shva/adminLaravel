@@ -7,9 +7,9 @@
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 
 <!-- AdminLTE App -->
-<script src="/dist/js/app.min.js"></script>
+{{--<script src="/dist/js/app.min.js"></script>
 
-<script src="{{ mix('/js/app.js') }}"></script>
+<script src="{{ mix('/js/app.js') }}"></script>--}}
 
 
 

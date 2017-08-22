@@ -11,5 +11,3 @@
 
 <!-- Custom Styles -->
 <link rel="stylesheet" href="{{ mix('/css/main.css') }}">
-<script src="/plugins/jQueryUI/jquery-ui.min.js"></script>
-<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>

@@ -2,6 +2,7 @@
     .custom-combobox {
         position: relative;
         display: inline-block;
+
     }
     .custom-combobox-toggle {
         position: absolute;
@@ -9,15 +10,17 @@
         bottom: 0;
         margin-left: -1px;
         padding: 0;
+        width:14%
     }
     .custom-combobox-input {
         margin: 0;
         padding-top: 2px;
         padding-bottom: 5px;
         padding-right: 5px;
+        width:85%;
     }
 </style>
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <form method="POST"
       action="{{ url('/register') }}">
 
@@ -106,7 +109,7 @@
       <!-- ministry input -->
 
           <div hidden id="ministryInput" class="form-group has-feedback{{ $errors->has('ministry') ? ' has-error' : '' }}">
-
+              <div class="ui-widget">
                   <select id="ministry" type="ministry"
                           name="ministry"
                           class="form-control"
@@ -127,6 +130,7 @@
                       <option value="CT Forearm/Elbow Right">CT Forearm/Elbow Right</option>
                       <option value="CT Forearm/Elbow Left">CT Forearm/Elbow Left</option>
                   </select>
+              </div>
               </div>
               <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 
@@ -255,10 +259,17 @@
     </div>
 
 </form>
+
+
+@include('layouts.guest-partials.scripts')
+@include('layouts.admin-partials.jquery-ui')
+
 <script>
-    $('#employedAt').css('color','lightgrey');
-    $('#employedAt').
-        change(function () {
+
+
+    $( function($) {
+        $('#employedAt').css('color','lightgrey');
+        $('#employedAt').change(function () {
             if(this.value!="Employed at"){
 
                 $('#employedAt').css('color','black');
@@ -268,10 +279,9 @@
             }
             else{
                 $('#ministryInput').show();
+
             }
         });
-
-    $( function() {
         $.widget( "custom.combobox", {
             _create: function() {
                 this.wrapper = $( "<span>" )
@@ -405,7 +415,9 @@
 
         $( "#ministry" ).combobox();
         $( "#toggle" ).on( "click", function() {
-            $( "#combobox" ).toggle();
+            $( "#ministry" ).toggle();
         });
+
     } );
+
 </script>
